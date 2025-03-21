@@ -1,0 +1,10 @@
+<div class="inventory">
+    <h2>Your Inventory</h2>
+    <div class="skin-list">
+      <div *ngFor="let skin of skins" class="skin-item">
+        <img [src]="skin.icon" [alt]="skin.name">
+        <p>{{ skin.name }}</p>
+        <button (click)="addToTrade(skin)">Add to Trade</button>
+      </div>
+    </div>
+  </div>
