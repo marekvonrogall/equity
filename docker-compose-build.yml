@@ -1,0 +1,6 @@
+services:
+  # Inventory Service
+  inventory-service:
+    build:
+      context: ./src/InventoryService
+    image: ghcr.io/${IMAGE_NAME}/inventory-service:latest
