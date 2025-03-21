@@ -9,3 +9,8 @@ services:
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf:ro
       - /etc/letsencrypt:/etc/letsencrypt:ro
+
+  # Inventory Service
+  inventory-service:
+    image: ghcr.io/marekvonrogall/equity/inventory-service:latest
+    container_name: inventory-service
