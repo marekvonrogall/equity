@@ -3,4 +3,7 @@
 GET {{InventoryService_HostAddress}}/Inventory/ping/
 Accept: application/json
 
+POST {{InventoryService_HostAddress}}/Inventory/raw/
+Accept: application/json
+
 ###
