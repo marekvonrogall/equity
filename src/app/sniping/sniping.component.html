@@ -1,2 +1,27 @@
-<h2>Sniping Page</h2>
-<p>sniping works!</p>
+<div class="sniping-container">
+    <h2>CS2 Item Sniping Tool</h2>
+    <div class="sniping-content">
+        <div class="sniping-filters">
+            <h3>Filters</h3>
+            <div class="filter-group">
+                <label>Item Type:</label>
+                <select>
+                    <option value="all">All Items</option>
+                    <option value="knife">Knives</option>
+                    <option value="glove">Gloves</option>
+                    <option value="rifle">Rifles</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label>Price Range:</label>
+                <input type="number" placeholder="Min Price">
+                <input type="number" placeholder="Max Price">
+            </div>
+            <button class="search-button">Search for Deals</button>
+        </div>
+        <div class="sniping-results">
+            <h3>Market Deals</h3>
+            <p>No items found. Try adjusting your filters.</p>
+        </div>
+    </div>
+</div>

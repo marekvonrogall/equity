@@ -1,7 +1,15 @@
-<h1>CS2 Trading Site</h1>
-<nav>
-    <button (click)="goToPage('')">Home</button>
-    <button (click)="goToPage('Sniping')">Go to Sniping</button>
-    <button (click)="goToPage('Trade')">Go to Trade</button>
-</nav>
-<router-outlet></router-outlet>
+<div class="app-container">
+    <header>
+        <h1>CS2 Trading Site</h1>
+        <nav>
+            <button [class.active]="currentPage === ''" (click)="goToPage('')">Home</button>
+            <button [class.active]="currentPage === 'sniping'" (click)="goToPage('Sniping')">Sniping Tool</button>
+            <button [class.active]="currentPage === 'trade'" (click)="goToPage('Trade')">Trading</button>
+        </nav>
+    </header>
+
+    <main>
+        <!-- Router outlet will inject the component for the current route -->
+        <router-outlet></router-outlet>
+    </main>
+</div>
