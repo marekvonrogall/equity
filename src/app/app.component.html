@@ -1,5 +1,20 @@
-<h1>CS2 Trading Site</h1>
-<app-inventory>
-<app-trade-box [tradeItems]="tradeItems"></app-trade-box>
-
-<router-outlet/>
+<div class="main-layout">
+    <header>
+      <h1>CS2 Trading Site</h1>
+    </header>
+    
+    <div class="content">
+      <app-inventory (skinAddedToTrade)="onSkinAddedToTrade($event)"></app-inventory>
+    </div>
+    
+    <div class="trade-container">
+      <app-trade-box 
+        [tradeItems]="tradeItems" 
+        (itemRemoved)="onItemRemoved($event)">
+      </app-trade-box>
+      <app-trade-actions
+        (acceptTrade)="onAcceptTrade()"
+        (declineTrade)="onDeclineTrade()">
+      </app-trade-actions>
+    </div>
+  </div>

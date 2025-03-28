@@ -1,29 +1,80 @@
-<div class="inventory">
+<div class="inventory-layout">
 
-  <h2>Your Steam Inventory</h2>
-  <input [(ngModel)]="yourSteamId" placeholder="Enter your Steam ID" />
-  <button (click)="loadInventory('your')">Load My Inventory</button>
+  
+  <div class="inventory-panels">
 
-  <div class="skin-list">
-    <div *ngFor="let skin of yourSkins" class="skin-item">
-      <img [src]="skin.icon" [alt]="skin.name">
-      <p>{{ skin.name }}</p>
-      <button (click)="addToTrade(skin)">Add to Trade</button>
+    
+    <div class="inventory-panel">
+      <h2>Your Steam Inventory</h2>
+      <div class="input-row">
+        <input class="steam-input" [(ngModel)]="yourSteamId" placeholder="Enter your Steam ID" />
+        <button class="inventory-btn" (click)="loadInventory('your')">Load My Inventory</button>
+      </div>
+
+      
+      <div class="inventory-grid">
+        <div
+          *ngFor="let skin of yourSkins"
+          class="skin-card"
+          [style.borderColor]="skin.color ? '#' + skin.color : '#2b2b2b'"
+        >
+          <div class="skin-card-header">
+            
+            <p class="skin-exterior" *ngIf="skin.exterior">{{ skin.exterior }}</p>
+          </div>
+
+          <div class="skin-image">
+            <img [src]="skin.icon" [alt]="skin.name" />
+          </div>
+
+        
+          <div class="skin-card-actions">
+            <button class="action-btn" (click)="addToTrade(skin)" [disabled]="skin.isAdded">
+              {{ skin.isAdded ? 'Added' : 'Add to Trade' }}
+            </button>
+            <button class="action-btn" *ngIf="skin.inspectLink" (click)="openInspectLink(skin.inspectLink)">
+              Inspect
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
-  </div>
 
-  <hr>
+   
+    <div class="inventory-panel">
+      <h2>Other Person's Inventory</h2>
+      <div class="input-row">
+        <input class="steam-input" [(ngModel)]="otherSteamId" placeholder="Enter other person's Steam ID" />
+        <button class="inventory-btn" (click)="loadInventory('other')">Load Their Inventory</button>
+      </div>
 
-  <h2>Other Person's Inventory</h2>
-  <input [(ngModel)]="otherSteamId" placeholder="Enter other person's Steam ID" />
-  <button (click)="loadInventory('other')">Load Their Inventory</button>
+      <div class="inventory-grid">
+        <div
+          *ngFor="let skin of otherSkins"
+          class="skin-card"
+          [style.borderColor]="skin.color ? '#' + skin.color : '#2b2b2b'"
+        >
+          <div class="skin-card-header">
+          
+            <p class="skin-exterior" *ngIf="skin.exterior">{{ skin.exterior }}</p>
+          </div>
 
-  <div class="skin-list">
-    <div *ngFor="let skin of otherSkins" class="skin-item">
-      <img [src]="skin.icon" [alt]="skin.name">
-      <p>{{ skin.name }}</p>
-      <button (click)="addToTrade(skin)">Add to Trade</button>
+          <div class="skin-image">
+            <img [src]="skin.icon" [alt]="skin.name" />
+          </div>
+
+          <div class="skin-card-actions">
+            <button class="action-btn" (click)="addToTrade(skin)" [disabled]="skin.isAdded">
+              {{ skin.isAdded ? 'Added' : 'Add to Trade' }}
+            </button>
+            <button class="action-btn" *ngIf="skin.inspectLink" (click)="openInspectLink(skin.inspectLink)">
+              Inspect
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
+
   </div>
 
 </div>

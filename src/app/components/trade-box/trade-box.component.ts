@@ -1,4 +1,4 @@
-import { Component, Input } from "@angular/core";
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -7,12 +7,14 @@ import { CommonModule } from '@angular/common';
   templateUrl: './trade-box.component.html',
   styleUrls: ['./trade-box.component.scss'],
   imports: [CommonModule]
-
 })
 export class TradeBoxComponent {
   @Input() tradeItems: any[] = [];
+  @Output() itemRemoved = new EventEmitter<any>();
 
-  removeFromTrade(item: any){
-    this.tradeItems = this.tradeItems.filter(i => i !== item);
+  removeFromTrade(item: any) {
+    
+    item.isAdded = false;
+    this.itemRemoved.emit(item);
   }
 }
