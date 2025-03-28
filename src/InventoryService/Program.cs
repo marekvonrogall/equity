@@ -3,6 +3,16 @@ using InventoryService.Controllers;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll", policy =>
+    {
+        policy.AllowAnyOrigin()
+              .AllowAnyHeader()
+              .AllowAnyMethod();
+    });
+});
+
 builder.WebHost.ConfigureKestrel((context, options) =>
 {
     options.Listen(IPAddress.Any, 5000);
@@ -16,6 +26,8 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 
 var app = builder.Build();
+
+app.UseCors("AllowAll");
 
 app.UseHttpsRedirection();
 
