@@ -6,4 +6,7 @@ Accept: application/json
 POST {{InventoryService_HostAddress}}/Inventory/raw/
 Accept: application/json
 
+POST {{InventoryService_HostAddress}}/Inventory/pretty/
+Accept: application/json
+
 ###
