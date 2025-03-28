@@ -1,1 +1,12 @@
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+$text-color: white;
+$primary-color: #1A1C33;
+$secondary-color: #6F718B;
+$padding : 10px;
 
+body{
+    font-family: 'Press Start 2P', monospace;
+    background-color: $primary-color;
+    padding: $padding;
+    
+}

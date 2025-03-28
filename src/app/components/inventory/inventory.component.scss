@@ -1,0 +1,30 @@
+h2{
+    color: white;
+}
+  .skin-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-top: 1rem;
+    justify-content: center;
+  }
+  
+  .skin-item {
+    width: 150px;
+    text-align: center;
+    background: #1a1a1a;
+    border-radius: 10px;
+    padding: 10px;
+    box-shadow: 0 0 10px #000;
+    transition: transform 0.2s ease;
+  }
+  
+  .skin-item:hover {
+    transform: scale(1.05);
+  }
+  
+  .skin-item img {
+    width: 100px;
+    height: auto;
+    border-radius: 5px;
+  }

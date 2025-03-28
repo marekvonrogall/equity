@@ -1,10 +1,29 @@
 <div class="inventory">
-    <h2>Your Inventory</h2>
-    <div class="skin-list">
-      <div *ngFor="let skin of skins" class="skin-item">
-        <img [src]="skin.icon" [alt]="skin.name">
-        <p>{{ skin.name }}</p>
-        <button (click)="addToTrade(skin)">Add to Trade</button>
-      </div>
+
+  <h2>Your Steam Inventory</h2>
+  <input [(ngModel)]="yourSteamId" placeholder="Enter your Steam ID" />
+  <button (click)="loadInventory('your')">Load My Inventory</button>
+
+  <div class="skin-list">
+    <div *ngFor="let skin of yourSkins" class="skin-item">
+      <img [src]="skin.icon" [alt]="skin.name">
+      <p>{{ skin.name }}</p>
+      <button (click)="addToTrade(skin)">Add to Trade</button>
     </div>
   </div>
+
+  <hr>
+
+  <h2>Other Person's Inventory</h2>
+  <input [(ngModel)]="otherSteamId" placeholder="Enter other person's Steam ID" />
+  <button (click)="loadInventory('other')">Load Their Inventory</button>
+
+  <div class="skin-list">
+    <div *ngFor="let skin of otherSkins" class="skin-item">
+      <img [src]="skin.icon" [alt]="skin.name">
+      <p>{{ skin.name }}</p>
+      <button (click)="addToTrade(skin)">Add to Trade</button>
+    </div>
+  </div>
+
+</div>
