@@ -4,3 +4,10 @@ services:
     build:
       context: ./src/InventoryService
     image: ghcr.io/${IMAGE_NAME}/inventory-service:latest
+
+  # Float Service
+  float-service:
+    build:
+      context: ./src/FloatService
+    image: ghcr.io/${IMAGE_NAME}/float-service:latest
+    

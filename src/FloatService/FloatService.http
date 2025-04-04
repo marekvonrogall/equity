@@ -1,0 +1,6 @@
+@FloatService_HostAddress = http://localhost:5001
+
+GET {{FloatService_HostAddress}}/Float/ping/
+Accept: application/json
+
+###
