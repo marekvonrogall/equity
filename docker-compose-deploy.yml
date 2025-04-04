@@ -14,3 +14,8 @@ services:
   inventory-service:
     image: ghcr.io/marekvonrogall/equity/inventory-service:latest
     container_name: inventory-service
+
+  # Float Service
+  float-service:
+    image: ghcr.io/marekvonrogall/equity/float-service:latest
+    container_name: float-service
