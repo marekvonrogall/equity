@@ -1,27 +1,122 @@
 <div class="sniping-container">
-    <h2>CS2 Item Sniping Tool</h2>
+    <h2>CS2 Item Market Comparison Tool</h2>
     <div class="sniping-content">
         <div class="sniping-filters">
-            <h3>Filters</h3>
+            <h3>Search Filters</h3>
             <div class="filter-group">
                 <label>Item Type:</label>
-                <select>
+                <select [(ngModel)]="itemType">
                     <option value="all">All Items</option>
                     <option value="knife">Knives</option>
-                    <option value="glove">Gloves</option>
+                    <option value="pistol">Pistols</option>
                     <option value="rifle">Rifles</option>
+                    <option value="smg">SMG's</option>
+                    <option value="heavy">Heavy</option>
                 </select>
             </div>
             <div class="filter-group">
-                <label>Price Range:</label>
-                <input type="number" placeholder="Min Price">
-                <input type="number" placeholder="Max Price">
+                <label>Item Name:</label>
+                <input type="text" [(ngModel)]="itemName" placeholder="e.g. Butterfly Knife, AWP Asiimov">
             </div>
-            <button class="search-button">Search for Deals</button>
+            <div class="filter-group">
+                <label>Price Range:</label>
+                <div class="price-inputs">
+                    <input type="number" [(ngModel)]="minPrice" placeholder="Min Price">
+                    <input type="number" [(ngModel)]="maxPrice" placeholder="Max Price">
+                </div>
+            </div>
+            <div class="filter-group">
+                <label>Marketplaces to Compare:</label>
+                <div class="checkbox-group">
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="steam" [(ngModel)]="selectedMarketplaces['steam']">
+                        <label for="steam">Steam Market</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="csfloat" [(ngModel)]="selectedMarketplaces['csfloat']">
+                        <label for="csfloat">CSFloat</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="skinbaron" [(ngModel)]="selectedMarketplaces['skinbaron']">
+                        <label for="skinbaron">Skinbaron</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="skinport" [(ngModel)]="selectedMarketplaces['skinport']">
+                        <label for="skinport">Skinport</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="buff" [(ngModel)]="selectedMarketplaces['buff']">
+                        <label for="buff">BUFF</label>
+                    </div>
+                </div>
+            </div>
+            <button class="search-button" (click)="compareMarkets()" [disabled]="isLoading">
+                {{ isLoading ? 'Comparing...' : 'Compare Prices' }}
+            </button>
         </div>
         <div class="sniping-results">
-            <h3>Market Deals</h3>
-            <p>No items found. Try adjusting your filters.</p>
+            <h3>Market Comparison Results</h3>
+            <div class="results-header">
+                <p>Find the best deals across marketplaces by comparing prices, float values, and availability.</p>
+            </div>
+            <div *ngIf="errorMessage" class="error-message">
+                {{ errorMessage }}
+            </div>
+            <div *ngIf="isLoading" class="loading-indicator">
+                <div class="spinner"></div>
+                <p>Fetching market data from selected sources...</p>
+            </div>
+            <div class="comparison-table" *ngIf="!isLoading && !errorMessage && comparisonResults.length > 0">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Item</th>
+                            <th *ngIf="selectedMarketplaces['steam']">Steam</th>
+                            <th *ngIf="selectedMarketplaces['csfloat']">CSFloat</th>
+                            <th *ngIf="selectedMarketplaces['skinbaron']">Skinbaron</th>
+                            <th *ngIf="selectedMarketplaces['skinport']">Skinport</th>
+                            <th *ngIf="selectedMarketplaces['buff']">BUFF</th>
+                            <th>Best Deal</th>
+                            <th>Savings</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let item of comparisonResults">
+                            <td class="item-name">{{ item.name }}</td>
+                            <td *ngIf="selectedMarketplaces['steam']"
+                                [ngClass]="{'best-price': item.bestDeal === 'steam'}">
+                                {{ item.steamPrice | currency:'USD':'symbol':'1.2-2' }}
+                            </td>
+                            <td *ngIf="selectedMarketplaces['csfloat']"
+                                [ngClass]="{'best-price': item.bestDeal === 'csfloat'}">
+                                {{ item.csfloatPrice | currency:'USD':'symbol':'1.2-2' }}
+                            </td>
+                            <td *ngIf="selectedMarketplaces['skinbaron']"
+                                [ngClass]="{'best-price': item.bestDeal === 'skinbaron'}">
+                                {{ item.skinbaronPrice | currency:'USD':'symbol':'1.2-2' }}
+                            </td>
+                            <td *ngIf="selectedMarketplaces['skinport']"
+                                [ngClass]="{'best-price': item.bestDeal === 'skinport'}">
+                                {{ item.skinportPrice | currency:'USD':'symbol':'1.2-2' }}
+                            </td>
+                            <td *ngIf="selectedMarketplaces['buff']"
+                                [ngClass]="{'best-price': item.bestDeal === 'buff'}">
+                                {{ item.buffPrice | currency:'USD':'symbol':'1.2-2' }}
+                            </td>
+                            <td class="best-deal">
+                                <span class="market-tag market-{{ item.bestDeal }}">{{ item.bestDeal }}</span>
+                            </td>
+                            <td class="savings">
+                                <span class="savings-amount">{{ item.dealSavings | currency:'USD':'symbol':'1.2-2'
+                                    }}</span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div *ngIf="!isLoading && !errorMessage && comparisonResults.length === 0" class="no-results">
+                <p>No items found matching your criteria. Try adjusting your filters.</p>
+            </div>
         </div>
     </div>
 </div>
