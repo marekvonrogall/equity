@@ -18,7 +18,7 @@ builder.WebHost.ConfigureKestrel((context, options) =>
     options.Listen(IPAddress.Any, 5001);
 });
 
-//builder.Services.AddHttpClient<FloatController>();
+builder.Services.AddHttpClient<FloatController>();
 
 // Add services to the container.
 builder.Services.AddControllers();
