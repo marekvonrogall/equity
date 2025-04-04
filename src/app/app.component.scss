@@ -1,24 +1,46 @@
 .main-layout {
-    display: flex;
-    flex-direction: column;
-    height: 100vh;
-    background-color: #131a23;
-    color: white;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  background-color: #131a23;
+  color: white;
+}
+
+header {
+  padding: 1rem;
+  text-align: center;
+}
+
+.content {
+  flex: 1;
+  overflow: hidden;
+}
+
+
+.trade-container {
+  display: flex;
+  flex-direction: row; 
+  gap: 1rem;
+  background-color: #2b2b2b;
+  padding: 1rem;
+  height: 200px;
+  overflow-y: auto;
+}
+
+
+.offer-panel {
+  flex: 1; 
+  overflow-y: auto;
+
+  h2 {
+    margin-top: 0;
+    color: #fff;
   }
-  
-  header {
-    padding: 1rem;
-    text-align: center;
-  }
-  
-  .content {
-    flex: 1;
-    overflow: hidden; 
-  }
-  
-  .trade-container {
-    background-color: #2b2b2b;
-    padding: 1rem;
-    height: 200px; 
-    overflow-y: auto;
-  }
+}
+
+
+.actions-panel {
+  display: flex;
+  align-items: flex-start; 
+  justify-content: center; 
+}

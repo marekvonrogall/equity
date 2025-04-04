@@ -1,16 +1,16 @@
 .trade-actions {
-    button {
-      background-color: #66c0f4;
-      color: white;
-      border: none;
-      padding: 6px 10px;
-      border-radius: 4px;
-      cursor: pointer;
-      font-size: 0.8rem;
-      margin-right: 0.5rem;
-  
-      &:hover {
-        background-color: #4f9bd1;
-      }
+  button {
+    background-color: #66c0f4;
+    color: white;
+    border: none;
+    padding: 6px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.8rem;
+    margin-right: 0.5rem;
+
+    &:hover {
+      background-color: #4f9bd1;
     }
   }
+}

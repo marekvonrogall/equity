@@ -13,7 +13,6 @@ export class TradeBoxComponent {
   @Output() itemRemoved = new EventEmitter<any>();
 
   removeFromTrade(item: any) {
-    
     item.isAdded = false;
     this.itemRemoved.emit(item);
   }

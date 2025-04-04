@@ -1,17 +1,13 @@
 <div class="inventory-layout">
-
-  
   <div class="inventory-panels">
 
-    
+   
     <div class="inventory-panel">
       <h2>Your Steam Inventory</h2>
       <div class="input-row">
         <input class="steam-input" [(ngModel)]="yourSteamId" placeholder="Enter your Steam ID" />
         <button class="inventory-btn" (click)="loadInventory('your')">Load My Inventory</button>
       </div>
-
-      
       <div class="inventory-grid">
         <div
           *ngFor="let skin of yourSkins"
@@ -19,17 +15,14 @@
           [style.borderColor]="skin.color ? '#' + skin.color : '#2b2b2b'"
         >
           <div class="skin-card-header">
-            
-            <p class="skin-exterior" *ngIf="skin.exterior">{{ skin.exterior }}</p>
+           
+            <p class="skin-exterior" *ngIf="skin.exterior && skin.exterior !== 'N/A'">{{ skin.exterior }}</p>
           </div>
-
           <div class="skin-image">
             <img [src]="skin.icon" [alt]="skin.name" />
           </div>
-
-        
           <div class="skin-card-actions">
-            <button class="action-btn" (click)="addToTrade(skin)" [disabled]="skin.isAdded">
+            <button class="action-btn" (click)="addToTrade(skin, 'your')" [disabled]="skin.isAdded">
               {{ skin.isAdded ? 'Added' : 'Add to Trade' }}
             </button>
             <button class="action-btn" *ngIf="skin.inspectLink" (click)="openInspectLink(skin.inspectLink)">
@@ -44,10 +37,12 @@
     <div class="inventory-panel">
       <h2>Other Person's Inventory</h2>
       <div class="input-row">
-        <input class="steam-input" [(ngModel)]="otherSteamId" placeholder="Enter other person's Steam ID" />
+        <input class="steam-input"
+       [(ngModel)]="otherSteamId"
+       placeholder="Enter other person's Steam ID"
+       (ngModelChange)="onPartnerSteamIdChange($event)" />
         <button class="inventory-btn" (click)="loadInventory('other')">Load Their Inventory</button>
       </div>
-
       <div class="inventory-grid">
         <div
           *ngFor="let skin of otherSkins"
@@ -55,16 +50,13 @@
           [style.borderColor]="skin.color ? '#' + skin.color : '#2b2b2b'"
         >
           <div class="skin-card-header">
-          
-            <p class="skin-exterior" *ngIf="skin.exterior">{{ skin.exterior }}</p>
+            <p class="skin-exterior" *ngIf="skin.exterior && skin.exterior !== 'N/A'">{{ skin.exterior }}</p>
           </div>
-
           <div class="skin-image">
             <img [src]="skin.icon" [alt]="skin.name" />
           </div>
-
           <div class="skin-card-actions">
-            <button class="action-btn" (click)="addToTrade(skin)" [disabled]="skin.isAdded">
+            <button class="action-btn" (click)="addToTrade(skin, 'other')" [disabled]="skin.isAdded">
               {{ skin.isAdded ? 'Added' : 'Add to Trade' }}
             </button>
             <button class="action-btn" *ngIf="skin.inspectLink" (click)="openInspectLink(skin.inspectLink)">
@@ -76,5 +68,4 @@
     </div>
 
   </div>
-
 </div>

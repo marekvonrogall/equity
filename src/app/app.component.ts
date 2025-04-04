@@ -3,6 +3,7 @@ import { InventoryComponent } from './components/inventory/inventory.component';
 import { TradeBoxComponent } from './components/trade-box/trade-box.component';
 import { TradeActionsComponent } from './components/trade-actions/trade-actions.component';
 import { RouterOutlet } from '@angular/router';
+import { Skin } from './components/inventory/inventory.component';
 
 @Component({
   selector: 'app-root',
@@ -13,23 +14,48 @@ import { RouterOutlet } from '@angular/router';
 })
 export class AppComponent {
   title = 'Equity';
-  tradeItems: any[] = [];
+  yourOffer: Skin[] = [];
+  otherOffer: Skin[] = [];
+  otherSteamId: string = '';
 
-  onSkinAddedToTrade(skin: any) {
-    this.tradeItems.push(skin);
+  onSkinAddedToTrade(event: { side: 'your' | 'other'; skin: Skin }) {
+    if (event.side === 'your') {
+      this.yourOffer.push(event.skin);    
+    } else {
+      this.otherOffer.push(event.skin);  
+    }
   }
 
-  onItemRemoved(item: any) {
-    this.tradeItems = this.tradeItems.filter(i => i !== item);
+  onItemRemoved(item: Skin, side: 'your' | 'other') {
+    if (side === 'your') {
+      this.yourOffer = this.yourOffer.filter(i => i !== item);
+    } else {
+      this.otherOffer = this.otherOffer.filter(i => i !== item);
+    }
   }
 
-  onAcceptTrade() {
-    // Logik muss noch implementiert werden.
-    console.log('Trade accepted', this.tradeItems);
+  onPartnerSteamIdChange(id: string) {
+    this.otherSteamId = id;
   }
 
-  onDeclineTrade() {
-    // Logik muss noch implementiert werden.
-    console.log('Trade declined');
+  onSendOffer() {
+    const payload = {
+      partnerSteamId: this.otherSteamId, 
+      yourOffer: this.yourOffer,     
+      otherOffer: this.otherOffer     
+    };
+    //Has to be fixed
+    /*
+    this.http.post('/api/sendTradeOffer', payload).subscribe(
+      (response) => {
+        console.log('Trade offer sent successfully:', response);
+      },
+      (error) => {
+        console.error('Error sending trade offer:', error);
+      }
+    );
+    */
   }
+
+ 
 }

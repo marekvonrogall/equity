@@ -9,6 +9,5 @@ import { CommonModule } from '@angular/common';
   imports: [CommonModule]
 })
 export class TradeActionsComponent {
-  @Output() acceptTrade = new EventEmitter<void>();
-  @Output() declineTrade = new EventEmitter<void>();
+  @Output() sendOffer = new EventEmitter<void>();
 }

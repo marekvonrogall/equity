@@ -1,20 +1,35 @@
 <div class="main-layout">
-    <header>
-      <h1>CS2 Trading Site</h1>
-    </header>
-    
-    <div class="content">
-      <app-inventory (skinAddedToTrade)="onSkinAddedToTrade($event)"></app-inventory>
+  <header>
+    <h1>CS2 Trading Site</h1>
+  </header>
+
+  <div class="content">
+    <app-inventory (skinAddedToTrade)="onSkinAddedToTrade($event)"
+    (partnerSteamIdChange)="onPartnerSteamIdChange($event)">
+    </app-inventory>
     </div>
-    
-    <div class="trade-container">
-      <app-trade-box 
-        [tradeItems]="tradeItems" 
-        (itemRemoved)="onItemRemoved($event)">
-      </app-trade-box>
-      <app-trade-actions
-        (acceptTrade)="onAcceptTrade()"
-        (declineTrade)="onDeclineTrade()">
-      </app-trade-actions>
+
+  
+  <div class="trade-container">
+    <div class="offer-panel">
+      <h2>Your Offer</h2>
+      <app-trade-box
+        [tradeItems]="yourOffer"
+        (itemRemoved)="onItemRemoved($event, 'your')"
+      ></app-trade-box>
+    </div>
+
+    <div class="offer-panel">
+      <h2>Other Person's Offer</h2>
+      <app-trade-box
+        [tradeItems]="otherOffer"
+        (itemRemoved)="onItemRemoved($event, 'other')"
+      ></app-trade-box>
+    </div>
+
+   
+    <div class="actions-panel">
+      <app-trade-actions (sendOffer)="onSendOffer()"></app-trade-actions>
     </div>
   </div>
+</div>

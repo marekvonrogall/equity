@@ -3,11 +3,6 @@ import { TradeService } from '../../services/trade.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
-interface Asset {
-  market_hash_name: string;
-  icon_url: string;
-}
-
 export interface Skin {
   name: string;
   icon: string;
@@ -31,14 +26,16 @@ export class InventoryComponent implements OnInit {
   yourSkins: Skin[] = [];
   otherSkins: Skin[] = [];
 
-  @Output() skinAddedToTrade = new EventEmitter<Skin>();
+ 
+  @Output() skinAddedToTrade = new EventEmitter<{ side: 'your' | 'other', skin: Skin }>();
+  @Output() partnerSteamIdChange = new EventEmitter<string>();
 
   constructor(private tradeService: TradeService) {}
 
   ngOnInit(): void {
-    
-    this.yourSkins = this.getPlaceholderSkins();
-    this.otherSkins = this.getPlaceholderSkins();
+   
+    this.yourSkins = [];
+    this.otherSkins = [];
   }
 
   loadInventory(type: 'your' | 'other'): void {
@@ -57,8 +54,7 @@ export class InventoryComponent implements OnInit {
               inspectLink: item.inspectLink,
               isAdded: false
             }))
-          : this.getPlaceholderSkins();
-
+          : [];
         if (type === 'your') {
           this.yourSkins = skins;
         } else {
@@ -68,44 +64,26 @@ export class InventoryComponent implements OnInit {
       (error) => {
         console.error(`Error loading ${type} inventory:`, error);
         if (type === 'your') {
-          this.yourSkins = this.getPlaceholderSkins();
+          this.yourSkins = [];
         } else {
-          this.otherSkins = this.getPlaceholderSkins();
+          this.otherSkins = [];
         }
       }
     );
   }
 
-  getPlaceholderSkins(): Skin[] {
-    return [
-      {
-        name: 'PP-Bizon | Candy Apple',
-        exterior: 'Minimal Wear',
-        rarity: 'Industrial Grade',
-        color: '5e98d9',
-        inspectLink: 'steam://rungame/730/76561202255233023/+csgo_econ_action_preview%20S76561198964829211A42691556360D14035694936916972728',
-        icon: 'https://steamcommunity-a.akamaihd.net/economy/image/-9a81dlWLwJ2UUGcVs_nsVtzdOEdtWwKGZZLQHTxDZ7I56KU0Zwwo4NUX4oFJZEHLbXH5ApeO4YmlhxYQknCRvCo04DEVlxkKgpotLO_JAlfwPz3YzhG09C_k4if2a73Me2CxW5Sup1wj7HEptun31G280U6MWHydobBJA8-ZlnQ_QPryb_xxcjrlO1CYf0',
-        isAdded: false
-      },
-      {
-        name: 'Negev | Wall Bang',
-        exterior: 'Field-Tested',
-        rarity: 'Industrial Grade',
-        color: '5e98d9',
-        inspectLink: 'steam://rungame/730/76561202255233023/+csgo_econ_action_preview%20S76561198964829211A42458760663D9541019220686385640',
-        icon: 'https://steamcommunity-a.akamaihd.net/economy/image/-9a81dlWLwJ2UUGcVs_nsVtzdOEdtWwKGZZLQHTxDZ7I56KU0Zwwo4NUX4oFJZEHLbXH5ApeO4YmlhxYQknCRvCo04DEVlxkKgpouL-iLhFf0Ob3fitH_sy3h5O0kOX1NYTfk2xU_vp8j-3I4IG73wHj-0s4ZGvyLdeWd1U2NVGB_gLvxujqhsC8vM_MzXBksyUm5nbVygv33081dXAwZw',
-        isAdded: false
-      }
-    ];
-  }
-  
-  addToTrade(skin: Skin) {
+  addToTrade(skin: Skin, side: 'your' | 'other') {
     if (skin.isAdded) return;
     skin.isAdded = true;
-    this.skinAddedToTrade.emit(skin);
+    this.skinAddedToTrade.emit({ side, skin });
   }
 
   openInspectLink(url: string): void {
     window.open(url, '_blank');
+  }
+
+  onPartnerSteamIdChange(newId: string) {
+    this.otherSteamId = newId;
+    console.log('Updated partner Steam ID:', this.otherSteamId);
   }
 }
