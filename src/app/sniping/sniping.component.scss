@@ -1,4 +1,6 @@
+// Main container 
 .sniping-container {
+
     padding: 25px;
     background-color: rgba(52, 73, 94, 0.05);
     border-radius: 12px;
@@ -6,9 +8,610 @@
     max-width: 1400px;
     border: none;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+
 }
 
+// Header styling
+.sniping-header {
+    text-align: center;
+    margin-bottom: 3rem;
+
+    h2 {
+        font-size: 2.2rem;
+        font-weight: 600;
+        color: #fff;
+        margin-bottom: 0.5rem;
+        text-align: center;
+
+        i {
+            color: #4caf50;
+            margin-right: 0.5rem;
+        }
+    }
+
+    .subtitle {
+        font-size: 1.1rem;
+        color: #aaa;
+        font-weight: 300;
+    }
+}
+
+// Content layout - making containers fixed size
 .sniping-content {
+
+    display: grid;
+    grid-template-columns: 350px 1fr; // Fixed width for filters column
+    gap: 2rem;
+
+    @media (max-width: 1024px) {
+        grid-template-columns: 1fr;
+    }
+}
+
+// Card styling with fixed heights
+.card {
+    background-color: rgba(30, 35, 45, 0.8);
+    border-radius: 10px;
+    padding: 2rem;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    transition: transform 0.2s, box-shadow 0.2s;
+
+    &:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 12px 20px rgba(0, 0, 0, 0.3);
+    }
+
+    h3 {
+        font-size: 1.5rem;
+        margin-bottom: 1.5rem;
+        color: #fff;
+        padding-bottom: 0.5rem;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        font-weight: 500;
+        text-align: left;
+    }
+}
+
+// Filters section with fixed height
+.sniping-filters {
+    height: 650px; // Fixed height
+    overflow-y: auto; // Enable scrolling if content exceeds height
+
+    // Custom scrollbar for filters
+    &::-webkit-scrollbar {
+        width: 6px;
+    }
+
+    &::-webkit-scrollbar-track {
+        background: rgba(20, 25, 35, 0.7);
+        border-radius: 4px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background: #4c4c4c;
+        border-radius: 4px;
+    }
+
+    &::-webkit-scrollbar-thumb:hover {
+        background: #5a5a5a;
+    }
+
+    .filter-group {
+        margin-bottom: 1.5rem;
+
+        label {
+            display: block;
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+            color: #ccc;
+            font-weight: 500;
+        }
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 0.75rem;
+        border-radius: 6px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        background-color: rgba(20, 25, 35, 0.7);
+        color: #fff;
+        font-size: 1rem;
+        transition: all 0.3s;
+
+        &:focus {
+            outline: none;
+            border-color: #4caf50;
+            box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.3);
+        }
+
+        &::placeholder {
+            color: #666;
+        }
+    }
+
+    // Price range inputs
+    .price-inputs {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+
+        .input-with-prefix {
+            position: relative;
+            flex: 1;
+
+            .prefix {
+                position: absolute;
+                left: 10px;
+                top: 50%;
+                transform: translateY(-50%);
+                color: #999;
+            }
+
+            input {
+                padding-left: 25px;
+            }
+        }
+
+        .price-separator {
+            color: #999;
+        }
+    }
+
+    // Marketplace selection
+    .marketplace-selectors {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+        gap: 1rem;
+
+        .marketplace-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 1rem 0.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            background-color: rgba(40, 45, 55, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.2s;
+
+            i {
+                font-size: 1.5rem;
+                margin-bottom: 0.5rem;
+                color: #999;
+            }
+
+            span {
+                font-size: 0.85rem;
+            }
+
+            &:hover {
+                background-color: rgba(50, 60, 70, 0.7);
+            }
+
+            &.selected {
+                background-color: rgba(76, 175, 80, 0.2);
+                border-color: #4caf50;
+
+                i,
+                span {
+                    color: #4caf50;
+                }
+            }
+        }
+    }
+
+    // Search button
+    .search-button {
+        width: 100%;
+        padding: 1rem;
+        margin-top: 1.5rem;
+        background-color: #4caf50;
+        border: none;
+        border-radius: 6px;
+        color: white;
+        font-size: 1rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.3s;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 0.5rem;
+
+        i {
+            font-size: 1rem;
+        }
+
+        &:hover:not(:disabled) {
+            background-color: #3d9c41;
+            transform: translateY(-2px);
+        }
+
+        &:disabled {
+            background-color: #2d4c2f;
+            color: #7f9e81;
+            cursor: not-allowed;
+        }
+    }
+}
+
+// Results section with fixed height
+.sniping-results {
+    height: 650px; // Match filter height
+    display: flex;
+    flex-direction: column;
+
+    // Give header a fixed space
+    .results-header,
+    h3 {
+        flex-shrink: 0;
+    }
+
+    // Make the table area scrollable
+    .comparison-table {
+        flex: 1;
+        overflow-y: auto;
+        overflow-x: auto;
+        margin-top: 1rem;
+
+        table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            color: #e0e0e0;
+
+            thead {
+                position: sticky;
+                top: 0;
+                z-index: 1;
+
+                tr {
+                    background-color: rgba(40, 50, 60, 0.8);
+                }
+
+                th {
+                    padding: 1rem;
+                    font-size: 0.9rem;
+                    color: #ccc;
+                    text-align: left;
+                    border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+                    white-space: nowrap;
+                    background-color: rgba(40, 50, 60, 0.8);
+
+                    i {
+                        margin-right: 0.5rem;
+                    }
+                }
+            }
+
+            tbody {
+                tr.result-row {
+                    transition: background-color 0.2s;
+
+                    &:hover {
+                        background-color: rgba(40, 50, 60, 0.5);
+                    }
+
+                    td {
+                        padding: 0.75rem 1rem;
+                        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+                        font-size: 0.95rem;
+                        color: #e0e0e0;
+                    }
+                }
+
+                .item-name {
+                    font-weight: 500;
+                    white-space: nowrap;
+
+                    .item-name-text {
+                        display: block;
+                        overflow: hidden;
+                        text-overflow: ellipsis;
+                        max-width: 200px;
+                    }
+                }
+
+                .best-price {
+                    color: #4caf50;
+                    font-weight: 600;
+                    position: relative;
+
+                    &:after {
+                        content: '';
+                        position: absolute;
+                        bottom: -1px;
+                        left: 0;
+                        width: 100%;
+                        height: 2px;
+                        background-color: #4caf50;
+                    }
+                }
+
+                .best-deal {
+                    .market-tag {
+                        display: inline-block;
+                        padding: 0.25rem 0.5rem;
+                        border-radius: 4px;
+                        font-size: 0.8rem;
+                        font-weight: 600;
+                        text-transform: uppercase;
+                    }
+
+                    .market-steam {
+                        background: rgba(24, 75, 101, 0.7);
+                    }
+
+                    .market-csfloat {
+                        background: rgba(55, 116, 144, 0.7);
+                    }
+
+                    .market-skinbaron {
+                        background: rgba(104, 80, 36, 0.7);
+                    }
+
+                    .market-skinport {
+                        background: rgba(51, 102, 153, 0.7);
+                    }
+
+                    .market-buff {
+                        background: rgba(153, 51, 51, 0.7);
+                    }
+                }
+
+                .savings {
+                    .savings-amount {
+                        display: inline-block;
+                        font-weight: 600;
+                        color: #4caf50;
+                    }
+                }
+            }
+        }
+    }
+
+    // Center loading and no results messages in available space
+    .loading-indicator,
+    .no-results {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .results-header {
+        margin-bottom: 1.5rem;
+
+        p {
+            color: #aaa;
+            font-size: 0.95rem;
+        }
+    }
+
+    .error-message {
+        background-color: rgba(220, 53, 69, 0.2);
+        border: 1px solid rgba(220, 53, 69, 0.5);
+        color: #f8d7da;
+        border-radius: 6px;
+        padding: 1rem;
+        margin-bottom: 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+
+        i {
+            color: #dc3545;
+            font-size: 1.2rem;
+        }
+    }
+
+    .loading-indicator {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 2rem 0;
+
+        .spinner {
+            height: 48px;
+            width: 48px;
+            border: 3px solid rgba(255, 255, 255, 0.2);
+            border-top-color: #4caf50;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 1rem;
+        }
+
+        p {
+            color: #bbb;
+        }
+    }
+
+    // Table styling
+    .comparison-table {
+        overflow-x: auto;
+
+        table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            color: #e0e0e0;
+
+            thead {
+                tr {
+                    background-color: rgba(40, 50, 60, 0.8);
+                }
+
+                th {
+                    padding: 1rem;
+                    font-size: 0.9rem;
+                    color: #ccc;
+                    text-align: left;
+                    border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+                    white-space: nowrap;
+                    background-color: rgba(40, 50, 60, 0.8);
+
+                    i {
+                        margin-right: 0.5rem;
+                    }
+                }
+            }
+
+            tbody {
+                tr.result-row {
+                    transition: background-color 0.2s;
+
+                    &:hover {
+                        background-color: rgba(40, 50, 60, 0.5);
+                    }
+
+                    td {
+                        padding: 0.75rem 1rem;
+                        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+                        font-size: 0.95rem;
+                        color: #e0e0e0;
+                    }
+                }
+
+                .item-name {
+                    font-weight: 500;
+                    white-space: nowrap;
+
+                    .item-name-text {
+                        display: block;
+                        overflow: hidden;
+                        text-overflow: ellipsis;
+                        max-width: 200px;
+                    }
+                }
+
+                .best-price {
+                    color: #4caf50;
+                    font-weight: 600;
+                    position: relative;
+
+                    &:after {
+                        content: '';
+                        position: absolute;
+                        bottom: -1px;
+                        left: 0;
+                        width: 100%;
+                        height: 2px;
+                        background-color: #4caf50;
+                    }
+                }
+
+                .best-deal {
+                    .market-tag {
+                        display: inline-block;
+                        padding: 0.25rem 0.5rem;
+                        border-radius: 4px;
+                        font-size: 0.8rem;
+                        font-weight: 600;
+                        text-transform: uppercase;
+                    }
+
+                    .market-steam {
+                        background: rgba(24, 75, 101, 0.7);
+                    }
+
+                    .market-csfloat {
+                        background: rgba(55, 116, 144, 0.7);
+                    }
+
+                    .market-skinbaron {
+                        background: rgba(104, 80, 36, 0.7);
+                    }
+
+                    .market-skinport {
+                        background: rgba(51, 102, 153, 0.7);
+                    }
+
+                    .market-buff {
+                        background: rgba(153, 51, 51, 0.7);
+                    }
+                }
+
+                .savings {
+                    .savings-amount {
+                        display: inline-block;
+                        font-weight: 600;
+                        color: #4caf50;
+                    }
+                }
+            }
+        }
+    }
+
+    // No results message
+    .no-results {
+        text-align: center;
+        padding: 3rem 0;
+
+        i {
+            font-size: 3rem;
+            color: #555;
+            margin-bottom: 1rem;
+        }
+
+        p {
+            color: #aaa;
+            font-size: 1.1rem;
+        }
+    }
+}
+
+// Animations
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+// Responsiveness adjustments
+@media (max-width: 768px) {
+    .sniping-container {
+        padding: 1rem;
+    }
+
+    .sniping-header {
+        margin-bottom: 1.5rem;
+
+        h2 {
+            font-size: 1.8rem;
+        }
+    }
+
+    .card {
+        padding: 1.5rem;
+    }
+}
+
+// Custom scrollbar styling
+.comparison-table::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+.comparison-table::-webkit-scrollbar-track {
+    background: rgba(20, 25, 35, 0.7);
+    border-radius: 4px;
+}
+
+.comparison-table::-webkit-scrollbar-thumb {
+    background: #4c4c4c;
+    border-radius: 4px;
+}
+
+.comparison-table::-webkit-scrollbar-thumb:hover {
+    background: #5a5a5a;
+=======
     display: flex;
     flex-wrap: wrap;
     gap: 25px;
@@ -32,9 +635,165 @@ select {
     padding: 20px;
     border-radius: 10px;
     box-shadow: 0 3px 15px rgba(0, 0, 0, 0.1);
+
 }
 
+// Override old styles
+select.form-control,
+input.form-control {
+    background-color: rgba(20, 25, 35, 0.7);
+    color: #e0e0e0;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    appearance: auto;
+    transition: all 0.3s;
+
+    &:focus {
+        border-color: #4caf50;
+        box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.3);
+    }
+}
+
+.filter-group select,
+.filter-group input[type="text"],
+.filter-group input[type="number"] {
+    background-color: rgba(20, 25, 35, 0.7);
+    color: #e0e0e0;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+
+    &:focus {
+        border-color: #4caf50;
+        box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.3);
+    }
+}
+
+.sniping-filters,
 .sniping-results {
+ 
+    background-color: rgba(30, 35, 45, 0.8);
+    min-width: auto;
+}
+
+.add-item-form {
+    background-color: rgba(30, 35, 45, 0.8);
+
+    h3 {
+        color: #fff;
+    }
+
+    .form-group {
+
+        input,
+        select {
+            background-color: rgba(20, 25, 35, 0.7);
+            color: #e0e0e0;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+    }
+}
+
+/* Remove this section that's causing color conflicts */
+/* 
+h2 {
+    color: #2c3e50;
+    text-align: center;
+    font-size: 28px;
+    margin-bottom: 15px;
+    font-weight: 600;
+}
+
+h3 {
+    color: #2c3e50;
+    border-bottom: 2px solid #3498db;
+    padding-bottom: 10px;
+    margin-top: 0;
+    font-size: 20px;
+    font-weight: 500;
+}
+*/
+
+// Ensure proper dark theme on hover states
+tbody tr:hover {
+    background-color: rgba(40, 50, 60, 0.5);
+}
+
+// Fix th and td for dark theme
+th,
+td {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    color: #e0e0e0;
+}
+
+th {
+    background-color: rgba(40, 50, 60, 0.8);
+    color: #ccc;
+}
+
+// Updates for other components
+.sniping-item {
+    background-color: rgba(30, 35, 45, 0.8);
+
+    .item-details {
+        h4 {
+            color: #e0e0e0;
+        }
+
+        .marketplace {
+            color: #aaa;
+        }
+    }
+}
+
+.loading {
+    color: #aaa;
+}
+
+// Add fixed width for table columns to prevent layout shifts
+.comparison-table table {
+    table-layout: fixed;
+
+    th,
+    td {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    th:first-child,
+    td:first-child {
+        width: 200px; // Fixed width for item name
+    }
+
+    th:not(:first-child):not(:last-child):not(:nth-last-child(2)),
+    td:not(:first-child):not(:last-child):not(:nth-last-child(2)) {
+        width: 100px; // Fixed width for price columns
+    }
+
+    th:nth-last-child(2),
+    td:nth-last-child(2) {
+        width: 100px; // Best deal column
+    }
+
+    th:last-child,
+    td:last-child {
+        width: 100px; // Savings column
+    }
+}
+
+// Responsive adjustments for fixed sizes
+@media (max-width: 1024px) {
+
+    .sniping-filters,
+    .sniping-results {
+        height: 500px; // Smaller height on tablets
+    }
+}
+
+@media (max-width: 768px) {
+
+    .sniping-filters,
+    .sniping-results {
+        height: 450px; // Even smaller height on mobile
+
     flex: 2;
     min-width: 300px;
     background-color: #fff;

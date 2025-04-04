@@ -10,7 +10,7 @@ describe('SnipingComponent', () => {
     await TestBed.configureTestingModule({
       imports: [SnipingComponent]
     })
-    .compileComponents();
+      .compileComponents();
 
     fixture = TestBed.createComponent(SnipingComponent);
     component = fixture.componentInstance;
