@@ -74,6 +74,11 @@ namespace InventoryService.Controllers
 
             foreach (var item in data.GetProperty("descriptions").EnumerateArray())
             {
+                if (!item.TryGetProperty("tradable", out JsonElement tradableElement) || tradableElement.GetInt32() != 1)
+                {
+                    continue;
+                }
+
                 string classid = item.GetProperty("classid").ToString();
                 var assetData = assetMap.ContainsKey(classid) ? assetMap[classid] : new { assetid = "UNKNOWN_ASSET_ID", contextid = "UNKNOWN_CONTEXT_ID" };
                 string assetId = assetData.GetType().GetProperty("assetid").GetValue(assetData).ToString();
