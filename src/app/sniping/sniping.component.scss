@@ -1,10 +1,14 @@
 // Main container 
 .sniping-container {
-    max-width: 1280px;
-    margin: 0 auto;
-    padding: 2rem;
-    color: #e0e0e0;
-    font-family: 'Roboto', sans-serif;
+
+    padding: 25px;
+    background-color: rgba(52, 73, 94, 0.05);
+    border-radius: 12px;
+    margin: 20px auto;
+    max-width: 1400px;
+    border: none;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+
 }
 
 // Header styling
@@ -34,6 +38,7 @@
 
 // Content layout - making containers fixed size
 .sniping-content {
+
     display: grid;
     grid-template-columns: 350px 1fr; // Fixed width for filters column
     gap: 2rem;
@@ -606,6 +611,31 @@
 
 .comparison-table::-webkit-scrollbar-thumb:hover {
     background: #5a5a5a;
+=======
+    display: flex;
+    flex-wrap: wrap;
+    gap: 25px;
+    margin-top: 25px;
+}
+
+select {
+    width: 100%;
+    padding: 10px;
+    border-radius: 10px;
+    border: 1px solid #ccc;
+    background-color: #f9f9f9;
+    font-size: 16px;
+}
+
+/* Filters Section */
+.sniping-filters {
+    flex: 1;
+    min-width: 280px;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 3px 15px rgba(0, 0, 0, 0.1);
+
 }
 
 // Override old styles
@@ -638,6 +668,7 @@ input.form-control {
 
 .sniping-filters,
 .sniping-results {
+ 
     background-color: rgba(30, 35, 45, 0.8);
     min-width: auto;
 }
@@ -762,5 +793,409 @@ th {
     .sniping-filters,
     .sniping-results {
         height: 450px; // Even smaller height on mobile
+
+    flex: 2;
+    min-width: 300px;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 3px 15px rgba(0, 0, 0, 0.1);
+    min-height: 300px;
+}
+
+.filter-group {
+    margin-bottom: 20px;
+}
+
+.filter-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: #34495e;
+    font-size: 16px;
+}
+
+.filter-group select,
+.filter-group input {
+    width: 100%;
+    padding: 8px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.filter-group select {
+    width: 100%;
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    background-color: #f9f9f9;
+    font-size: 15px;
+    color: #2c3e50;
+    cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width='24' height='24'%3e%3cpath fill='none' d='M0 0h24v24H0z'/%3e%3cpath d='M12 13.172l4.95-4.95 1.414 1.414L12 16 5.636 9.636 7.05 8.222z' fill='%233498db'/%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.filter-group select:hover,
+.filter-group input:hover {
+    border-color: #bbb;
+}
+
+.filter-group select:focus,
+.filter-group input:focus {
+    outline: none;
+    border-color: #3498db;
+    box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+}
+
+.filter-group input[type="text"],
+.filter-group input[type="number"] {
+    width: 100%;
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    background-color: #f9f9f9;
+    font-size: 15px;
+    color: #2c3e50;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.price-inputs {
+    display: flex;
+    gap: 10px;
+}
+
+.price-inputs input {
+    width: 50%;
+}
+
+.checkbox-group {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 10px;
+}
+
+.checkbox-item {
+    display: flex;
+    align-items: center;
+}
+
+.checkbox-item input[type="checkbox"] {
+    margin-right: 10px;
+    width: 18px;
+    height: 18px;
+    accent-color: #3498db;
+    cursor: pointer;
+}
+
+.checkbox-item label {
+    margin-bottom: 0;
+    cursor: pointer;
+}
+
+.search-button {
+    background: linear-gradient(135deg, #3498db, #2980b9);
+    color: white;
+    border: none;
+    padding: 14px;
+    border-radius: 8px;
+    cursor: pointer;
+    width: 100%;
+    font-size: 16px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    margin-top: 10px;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.search-button:hover {
+    background: linear-gradient(135deg, #2980b9, #2573a7);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(41, 128, 185, 0.4);
+}
+
+.search-button:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 8px rgba(41, 128, 185, 0.4);
+}
+
+h2 {
+    color: #2c3e50;
+    text-align: center;
+    font-size: 28px;
+    margin-bottom: 15px;
+    font-weight: 600;
+}
+
+h3 {
+    color: #2c3e50;
+    border-bottom: 2px solid #3498db;
+    padding-bottom: 10px;
+    margin-top: 0;
+    font-size: 20px;
+    font-weight: 500;
+}
+
+/* Results Section */
+.results-header p {
+    color: #7f8c8d;
+    font-size: 15px;
+    margin-bottom: 20px;
+    line-height: 1.5;
+}
+
+.comparison-table {
+    overflow-x: auto;
+    margin-top: 15px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 15px;
+}
+
+th,
+td {
+    padding: 14px 15px;
+    text-align: left;
+    border-bottom: 1px solid #ecf0f1;
+}
+
+th {
+    background-color: #f7f9fa;
+    font-weight: 600;
+    color: #2c3e50;
+    position: sticky;
+    top: 0;
+    z-index: 1;
+}
+
+tbody tr:hover {
+    background-color: #f8f9fa;
+}
+
+.no-results td {
+    text-align: center;
+    padding: 40px 20px;
+    color: #95a5a6;
+    font-style: italic;
+}
+
+/* Responsive design */
+@media (max-width: 1024px) {
+    .sniping-content {
+        flex-direction: column;
+    }
+
+    .sniping-filters,
+    .sniping-results {
+        width: 100%;
+    }
+
+    .sniping-container {
+        margin: 10px;
+        padding: 15px;
+    }
+}
+
+/* Scrollbar customization */
+.comparison-table::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+.comparison-table::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+}
+
+.comparison-table::-webkit-scrollbar-thumb {
+    background: #bdc3c7;
+    border-radius: 4px;
+}
+
+.comparison-table::-webkit-scrollbar-thumb:hover {
+    background: #95a5a6;
+}
+
+/* New styles */
+.loading-indicator {
+    text-align: center;
+    padding: 40px;
+    color: #7f8c8d;
+}
+
+.error-message {
+    background-color: #fdedec;
+    color: #c0392b;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+.best-price {
+    color: #27ae60;
+    font-weight: bold;
+}
+
+.market-tag {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: bold;
+    text-transform: capitalize;
+}
+
+.market-steam {
+    background-color: #1b2838;
+    color: white;
+}
+
+.market-csfloat {
+    background-color: #ff9800;
+    color: white;
+}
+
+.market-skinbaron {
+    background-color: #4caf50;
+    color: white;
+}
+
+.market-skinport {
+    background-color: #f44336;
+    color: white;
+}
+
+.market-buff {
+    background-color: #4a0072;
+    color: white;
+}
+
+/* Add these styles to your existing SCSS file */
+
+.loading-indicator {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+}
+
+.spinner {
+    width: 40px;
+    height: 40px;
+    border: 4px solid rgba(0, 0, 0, 0.1);
+    border-left-color: #3498db;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-bottom: 15px;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.error-message {
+    background-color: #fdedec;
+    color: #c0392b;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    font-weight: 500;
+}
+
+.item-name {
+    font-weight: 500;
+}
+
+.best-price {
+    color: #27ae60;
+    font-weight: 700;
+    position: relative;
+}
+
+.best-price::after {
+    content: "✓";
+    margin-left: 6px;
+    color: #27ae60;
+}
+
+.market-tag {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: bold;
+    text-transform: capitalize;
+}
+
+.market-steam {
+    background-color: #1b2838;
+    color: white;
+}
+
+.market-csfloat {
+    background-color: #ff9800;
+    color: white;
+}
+
+.market-skinbaron {
+    background-color: #4caf50;
+    color: white;
+}
+
+.market-skinport {
+    background-color: #f44336;
+    color: white;
+}
+
+.market-buff {
+    background-color: #673ab7;
+    color: white;
+}
+
+.savings {
+    color: #27ae60;
+    font-weight: 600;
+}
+
+.savings-amount::before {
+    content: "Save ";
+}
+
+.no-results {
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    padding: 30px;
+    text-align: center;
+    color: #7f8c8d;
+}
+
+/* Add hover effect for rows */
+tbody tr {
+    transition: background-color 0.2s;
+}
+
+tbody tr:hover {
+    background-color: #f5f9fc;
+}
+
+/* Add responsive styling for small screens */
+@media (max-width: 768px) {
+    .comparison-table {
+        overflow-x: auto;
+    }
+
+    table {
+        min-width: 500px;
     }
 }
