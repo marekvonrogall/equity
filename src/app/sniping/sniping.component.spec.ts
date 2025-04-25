@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { SnipingComponent } from './sniping.component';
 
 describe('SnipingComponent', () => {
@@ -8,7 +8,7 @@ describe('SnipingComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [SnipingComponent]
+      imports: [SnipingComponent, HttpClientTestingModule]
     })
       .compileComponents();
 

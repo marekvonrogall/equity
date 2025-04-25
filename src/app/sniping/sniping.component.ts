@@ -1,288 +1,146 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { catchError, finalize } from 'rxjs/operators';
+import { of } from 'rxjs';
 
-interface MarketItem {
+interface SkinportItem {
+  market_hash_name: string;
+  currency: string;
+  suggested_price: number;
+  min_price: number;
+  max_price: number;
+  mean_price: number;
+  median_price: number;
+  quantity: number;
+  item_page: string;
+  market_page: string;
+  created_at: number;
+  updated_at: number;
+}
+
+interface DisplayItem {
   name: string;
-  steamPrice?: number;
-  csfloatPrice?: number;
-  skinbaronPrice?: number;
-  skinportPrice?: number;
-  buffPrice?: number;
-  bestDeal: string;
-  dealSavings?: number;
+  skinportPrice: number;
+  suggestedPrice: number;
+  quantity: number;
 }
 
 @Component({
   selector: 'app-sniping',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, HttpClientModule],
   templateUrl: './sniping.component.html',
   styleUrls: ['./sniping.component.scss']
 })
 export class SnipingComponent implements OnInit {
-  itemType: 'all' | 'knife' | 'pistol' | 'rifle' | 'smg' | 'heavy' = 'all';
+  itemType: 'all' | 'knife' | 'pistol' | 'rifle' | 'smg' | 'heavy' | 'glove' = 'all';
   itemName: string = '';
   minPrice: number | null = null;
   maxPrice: number | null = null;
-  selectedMarketplaces: { [key: string]: boolean } = {
-    steam: true,
-    csfloat: true,
-    skinbaron: true,
-    skinport: true,
-    buff: false
-  };
 
-  comparisonResults: MarketItem[] = [];
+  comparisonResults: DisplayItem[] = [];
   isLoading: boolean = false;
   errorMessage: string = '';
 
-  // WARNING: For testing only! These are placeholder keys and won't work
-  private apiKeys = {
-    // Replace these with actual test API keys if you have them
-    steam: 'TEST_STEAM_KEY',
-    csfloat: 'TEST_CSFLOAT_KEY',
-    skinbaron: 'TEST_SKINBARON_KEY',
-    skinport: 'TEST_SKINPORT_KEY',
-    buff: 'TEST_BUFF_KEY'
-  };
-
-  // API endpoint URLs - these are placeholders and would need to be replaced with actual endpoints
-  private apiEndpoints = {
-    steam: 'https://steamcommunity.com/market/priceoverview',
-    csfloat: 'https://csfloat.com/api/v1/listings',
-    skinbaron: 'https://api.skinbaron.com/v2/get_items',
-    skinport: 'https://api.skinport.com/v1/items',
-    buff: 'https://api.buff.163.com/api/market/goods'
-  };
+  // Skinport API endpoint
+  private skinportApiEndpoint = 'https://equity.vrmarek.me/float/skinport';
 
   constructor(private http: HttpClient) {
     console.log('Sniping component initialized');
   }
 
   ngOnInit() {
-    // Load some demo data on initialization for testing
-    setTimeout(() => {
-      this.comparisonResults = this.getDemoData();
-    }, 500);
+    // Initialize component without loading data
   }
 
   compareMarkets() {
     this.isLoading = true;
     this.errorMessage = '';
+    this.comparisonResults = [];
 
     console.log(`Searching for: ${this.itemName} (${this.itemType})`);
     console.log(`Price range: $${this.minPrice || 0} - $${this.maxPrice || 'max'}`);
-    console.log('Selected marketplaces:',
-      Object.entries(this.selectedMarketplaces)
-        .filter(([_, selected]) => selected)
-        .map(([name]) => name)
-    );
 
-    // For testing, we'll simulate API calls with timeouts
-    setTimeout(() => {
-      try {
-        // In a real implementation, you'd make actual API calls here
-        // For now, we'll just use demo data
-        this.comparisonResults = this.getDemoData().filter(item => {
-          // Apply filters
-          if (this.itemName && !item.name.toLowerCase().includes(this.itemName.toLowerCase())) {
-            return false;
-          }
+    // Fetch data from Skinport API
+    this.fetchSkinportItems();
+  }
 
-          if (this.minPrice !== null && this.getBestPrice(item) < this.minPrice) {
-            return false;
-          }
-
-          if (this.maxPrice !== null && this.getBestPrice(item) > this.maxPrice) {
-            return false;
-          }
-
-          if (this.itemType !== 'all') {
-            // Simple type filtering - in a real app this would be more sophisticated
-            const typeMatches: Record<string, string[]> = {
-              'knife': ['knife', 'bayonet', 'karambit', 'butterfly'],
-              'pistol': ['pistol', 'deagle', 'p250', 'glock', 'usp-s'],
-              'rifle': ['ak-47', 'm4a4', 'm4a1-s', 'awp', 'ssg'],
-              'smg': ['mp7', 'mp9', 'p90', 'ump-45'],
-              'heavy': ['nova', 'mag-7', 'm249', 'negev'],
-            };
-
-            const matchTerms = typeMatches[this.itemType] || [];
-            return matchTerms.some(term =>
-              item.name.toLowerCase().includes(term.toLowerCase())
-            );
-          }
-
-          return true;
-        });
-
-        this.isLoading = false;
-
-        if (this.comparisonResults.length === 0) {
-          this.errorMessage = 'No items found matching your criteria. Try adjusting your filters.';
+  fetchSkinportItems() {
+    this.http.get<SkinportItem[]>(this.skinportApiEndpoint)
+      .pipe(
+        catchError(error => {
+          console.error('Error fetching Skinport data:', error);
+          this.errorMessage = 'Failed to fetch data from Skinport. Please try again later.';
+          return of([] as SkinportItem[]);
+        }),
+        finalize(() => {
+          this.isLoading = false;
+        })
+      )
+      .subscribe(items => {
+        if (items && items.length > 0) {
+          console.log(`Received ${items.length} items from Skinport`);
+          this.processSkinportData(items);
+        } else {
+          console.log('No Skinport data received or empty array returned');
+          this.errorMessage = 'No items found from Skinport.';
         }
-      } catch (error) {
-        console.error('Error during search:', error);
-        this.errorMessage = 'An error occurred while processing your search.';
-        this.isLoading = false;
+      });
+  }
+
+  processSkinportData(skinportItems: SkinportItem[]) {
+    // Filter items based on user criteria
+    const filteredItems = skinportItems.filter(item => {
+      // Apply name filter if provided
+      if (this.itemName && !item.market_hash_name.toLowerCase().includes(this.itemName.toLowerCase())) {
+        return false;
       }
-    }, 1500); // Simulate API delay
-  }
 
-  getBestPrice(item: MarketItem): number {
-    const prices = [
-      item.steamPrice,
-      item.csfloatPrice,
-      item.skinbaronPrice,
-      item.skinportPrice,
-      item.buffPrice
-    ].filter(price => price !== undefined) as number[];
-
-    return Math.min(...prices);
-  }
-
-  // This simulates API responses for testing
-  getDemoData(): MarketItem[] {
-    return [
-      {
-        name: 'AWP | Asiimov (Field-Tested)',
-        steamPrice: 95.23,
-        csfloatPrice: 92.50,
-        skinbaronPrice: 89.99,
-        skinportPrice: 94.00,
-        buffPrice: 84.50,
-        bestDeal: 'buff',
-        dealSavings: 5.49
-      },
-      {
-        name: 'AK-47 | Redline (Field-Tested)',
-        steamPrice: 15.23,
-        csfloatPrice: 14.80,
-        skinbaronPrice: 15.99,
-        skinportPrice: 14.50,
-        buffPrice: 13.75,
-        bestDeal: 'buff',
-        dealSavings: 1.48
-      },
-      {
-        name: 'Butterfly Knife | Doppler (Factory New)',
-        steamPrice: 1250.00,
-        csfloatPrice: 1195.00,
-        skinbaronPrice: 1210.00,
-        skinportPrice: 1180.00,
-        buffPrice: 1150.00,
-        bestDeal: 'buff',
-        dealSavings: 100.00
-      },
-      {
-        name: 'M4A4 | The Emperor (Minimal Wear)',
-        steamPrice: 47.50,
-        csfloatPrice: 44.99,
-        skinbaronPrice: 45.75,
-        skinportPrice: 43.50,
-        buffPrice: 45.00,
-        bestDeal: 'skinport',
-        dealSavings: 4.00
-      },
-      {
-        name: 'Glock-18 | Water Elemental (Factory New)',
-        steamPrice: 18.75,
-        csfloatPrice: 17.25,
-        skinbaronPrice: 17.50,
-        skinportPrice: 17.99,
-        buffPrice: 16.80,
-        bestDeal: 'buff',
-        dealSavings: 1.95
-      },
-      {
-        name: 'Karambit | Fade (Factory New)',
-        steamPrice: 1800.00,
-        csfloatPrice: 1750.00,
-        skinbaronPrice: 1705.00,
-        skinportPrice: 1725.00,
-        buffPrice: 1680.00,
-        bestDeal: 'buff',
-        dealSavings: 120.00
-      },
-      {
-        name: 'USP-S | Kill Confirmed (Field-Tested)',
-        steamPrice: 120.50,
-        csfloatPrice: 115.75,
-        skinbaronPrice: 110.25,
-        skinportPrice: 112.00,
-        buffPrice: 108.50,
-        bestDeal: 'buff',
-        dealSavings: 12.00
+      // Apply price filters if provided
+      if (this.minPrice !== null && item.suggested_price < this.minPrice) {
+        return false;
       }
-    ];
-  }
 
-  // In a real implementation, these would actually call the APIs
-  // For testing, we're providing these methods to show what real implementation would look like
+      if (this.maxPrice !== null && item.suggested_price > this.maxPrice) {
+        return false;
+      }
 
-  private fetchSteamPrices() {
-    // Steam Market API doesn't have a direct API with authentication
-    // In a real app, you'd need to use a proxy server to fetch data
-    const params = {
-      appid: '730', // CS2 (formerly CS:GO)
-      currency: '1', // USD
-      market_hash_name: this.itemName
-    };
+      // Apply item type filter
+      if (this.itemType !== 'all') {
+        const typeMatches: Record<string, string[]> = {
+          'knife': ['knife', 'bayonet', 'karambit', 'butterfly', 'huntsman', 'falchion', 'bowie', 'daggers', 'flip', 'gut', 'navaja', 'stiletto', 'talon', 'ursus', 'classic', 'paracord', 'skeleton', 'nomad', 'survival'],
+          'pistol': ['pistol', 'deagle', 'desert eagle', 'p250', 'glock', 'usp-s', 'p2000', 'five-seven', 'tec-9', 'cz75', 'r8', 'dual berettas'],
+          'rifle': ['ak-47', 'm4a4', 'm4a1-s', 'awp', 'ssg', 'aug', 'sg 553', 'scar-20', 'g3sg1', 'famas', 'galil'],
+          'smg': ['mp7', 'mp9', 'p90', 'ump-45', 'mp5-sd', 'mac-10', 'pp-bizon'],
+          'heavy': ['nova', 'mag-7', 'm249', 'negev', 'xm1014', 'sawed-off'],
+          'glove': ['gloves', 'hand wraps', 'driver gloves', 'moto gloves', 'specialist gloves', 'sport gloves', 'bloodhound gloves', 'hydra gloves']
+        };
 
-    console.log('Fetching Steam prices:', params);
-    // In reality: return this.http.get(this.apiEndpoints.steam, { params });
-  }
+        const matchTerms = typeMatches[this.itemType] || [];
+        const itemNameLower = item.market_hash_name.toLowerCase();
+        return matchTerms.some(term => itemNameLower.includes(term.toLowerCase()));
+      }
 
-  private fetchCSFloatPrices() {
-    const headers = new HttpHeaders({
-      'Authorization': `Bearer ${this.apiKeys.csfloat}`
+      return true;
     });
 
-    const params = {
-      limit: '20',
-      category: this.itemType !== 'all' ? this.itemType : undefined,
-      name: this.itemName || undefined,
-      min_price: this.minPrice?.toString(),
-      max_price: this.maxPrice?.toString()
-    };
-
-    console.log('Fetching CSFloat prices:', params);
-    // In reality: return this.http.get(this.apiEndpoints.csfloat, { headers, params });
-  }
-
-  private fetchSkinbaronPrices() {
-    const params = {
-      apikey: this.apiKeys.skinbaron,
-      appid: '730',
-      search_item: this.itemName || '',
-      min_price: this.minPrice ? this.minPrice * 100 : undefined, // Some APIs use cents
-      max_price: this.maxPrice ? this.maxPrice * 100 : undefined
-    };
-
-    console.log('Fetching Skinbaron prices:', params);
-    // In reality: return this.http.get(this.apiEndpoints.skinbaron, { params });
-  }
-
-  private fetchSkinportPrices() {
-    const headers = new HttpHeaders({
-      'Authorization': `Bearer ${this.apiKeys.skinport}`
+    // Convert to simple DisplayItem format and limit to top 50 items
+    this.comparisonResults = filteredItems.slice(0, 50).map(item => {
+      return {
+        name: item.market_hash_name,
+        skinportPrice: item.min_price, // Use min_price as the actual price
+        suggestedPrice: item.suggested_price,
+        quantity: item.quantity
+      };
     });
 
-    const params = {
-      game: 'csgo',
-      currency: 'USD',
-      limit: '50'
-    };
+    // Sort by price (ascending)
+    this.comparisonResults.sort((a, b) => a.skinportPrice - b.skinportPrice);
 
-    console.log('Fetching Skinport prices:', params);
-    // In reality: return this.http.get(this.apiEndpoints.skinport, { headers, params });
-  }
-
-  private fetchBuffPrices() {
-    // BUFF requires special handling, often through a proxy
-    console.log('BUFF API requires special handling, often not directly accessible from frontend');
-    // In reality: You'd use a backend service to access BUFF
+    if (this.comparisonResults.length === 0) {
+      this.errorMessage = 'No items found matching your criteria. Try adjusting your filters.';
+    }
   }
 }
