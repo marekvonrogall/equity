@@ -80,7 +80,9 @@ namespace FloatService.Controllers
                         content = await response.Content.ReadAsStringAsync();
                     }
 
-                    ProcessAndSortSkinportData(content);
+                    _cachedSkinportData = JsonDocument.Parse(content).RootElement;
+
+                    ProcessAndSortSkinportData(_cachedSkinportData);
 
                     return _cachedSkinportData;
                 }
@@ -91,9 +93,9 @@ namespace FloatService.Controllers
             }
         }
 
-        private void ProcessAndSortSkinportData(string content)
+        private void ProcessAndSortSkinportData(JsonElement data)
         {
-            var items = JsonSerializer.Deserialize<List<SkinportItem>>(content);
+            var items = JsonSerializer.Deserialize<List<SkinportItem>>(data.ToString());
 
             foreach (var item in items)
             {
