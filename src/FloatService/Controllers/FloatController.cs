@@ -58,6 +58,7 @@ namespace FloatService.Controllers
 
                 HttpResponseMessage response = await _httpClient.SendAsync(requestMessage);
 
+                /*
                 if (response.StatusCode == HttpStatusCode.TooManyRequests)
                 {
                     if (_cachedSkinportData.ValueKind == JsonValueKind.Undefined)
@@ -65,7 +66,7 @@ namespace FloatService.Controllers
                         throw new HttpRequestException("Rate-limited and no cached data available.");
                     }
                     return _cachedSkinportData;
-                }
+                }*/
 
                 if (response.IsSuccessStatusCode)
                 {
