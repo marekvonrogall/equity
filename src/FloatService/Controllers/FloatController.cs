@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Text.Json;
+using System.IO.Compression;
 
 namespace FloatService.Controllers 
 {
@@ -47,8 +48,21 @@ namespace FloatService.Controllers
 
                 if (response.IsSuccessStatusCode)
                 {
-                    string content = await response.Content.ReadAsStringAsync();
-                    return JsonDocument.Parse(content).RootElement;
+                    if (response.Content.Headers.ContentEncoding.Contains("br"))
+                    {
+                        using (var compressedStream = await response.Content.ReadAsStreamAsync())
+                        using (var brotliStream = new BrotliStream(compressedStream, CompressionMode.Decompress))
+                        using (var reader = new StreamReader(brotliStream))
+                        {
+                            string content = await reader.ReadToEndAsync();
+                            return JsonDocument.Parse(content).RootElement;
+                        }
+                    }
+                    else
+                    {
+                        string content = await response.Content.ReadAsStringAsync();
+                        return JsonDocument.Parse(content).RootElement;
+                    }
                 }
                 else
                 {
