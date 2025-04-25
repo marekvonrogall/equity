@@ -19,6 +19,7 @@ builder.WebHost.ConfigureKestrel((context, options) =>
 });
 
 builder.Services.AddHttpClient<FloatController>();
+builder.Services.AddSingleton<FloatController>();
 
 // Add services to the container.
 builder.Services.AddControllers();

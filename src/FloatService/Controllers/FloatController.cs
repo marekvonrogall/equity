@@ -30,11 +30,10 @@ namespace FloatService.Controllers
         [HttpGet("highest_discount")]
         public IActionResult GetHighestDiscounted()
         {
-            /*
             if (_sortedSkinportItems == null)
             {
                 return BadRequest(new { message = "No data available." });
-            }*/
+            }
 
             return Ok(_sortedSkinportItems.Take(50));
         }
@@ -42,11 +41,10 @@ namespace FloatService.Controllers
         [HttpGet("skinport")]
         public IActionResult GetSkinportItems()
         {
-            /*
             if (_cachedSkinportData.ValueKind == JsonValueKind.Undefined)
             {
                 return BadRequest(new { message = "No data available, and the connection is being rate limited." });
-            }*/
+            }
             return Ok(_cachedSkinportData);
         }
 
@@ -60,7 +58,6 @@ namespace FloatService.Controllers
 
                 HttpResponseMessage response = await _httpClient.SendAsync(requestMessage);
 
-                /*
                 if (response.StatusCode == HttpStatusCode.TooManyRequests)
                 {
                     if (_cachedSkinportData.ValueKind == JsonValueKind.Undefined)
@@ -68,7 +65,7 @@ namespace FloatService.Controllers
                         throw new HttpRequestException("Rate-limited and no cached data available.");
                     }
                     return _cachedSkinportData;
-                }*/
+                }
 
                 if (response.IsSuccessStatusCode)
                 {
