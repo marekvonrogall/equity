@@ -41,11 +41,11 @@ namespace FloatService.Controllers
         [HttpGet("skinport")]
         public IActionResult GetSkinportItems()
         {
-            if (_sortedSkinportItems == null)
+            if (_cachedSkinportData.ValueKind == JsonValueKind.Undefined)
             {
-                return Ok(_cachedSkinportData);
+                return BadRequest(new { message = "No data available, and the connection is being rate limited." });
             }
-            return BadRequest(new { message = "The connection is being rate limited." });
+            return Ok(_cachedSkinportData);
         }
 
         private async Task<JsonElement> FetchSkinportItems()
@@ -60,6 +60,10 @@ namespace FloatService.Controllers
 
                 if (response.StatusCode == HttpStatusCode.TooManyRequests)
                 {
+                    if (_cachedSkinportData.ValueKind == JsonValueKind.Undefined)
+                    {
+                        throw new HttpRequestException("Rate-limited and no cached data available.");
+                    }
                     return _cachedSkinportData;
                 }
 
