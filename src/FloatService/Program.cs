@@ -35,4 +35,7 @@ app.UseAuthorization();
 
 app.MapControllers();
 
+var floatController = app.Services.GetRequiredService<FloatController>();
+floatController.StartFetchingData();
+
 app.Run();
