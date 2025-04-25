@@ -11,12 +11,13 @@ namespace FloatService.Controllers
     {
         private readonly HttpClient _httpClient;
         private JsonElement _cachedSkinportData;
-        private DateTime _lastFetched;
+        private List<SkinportItem> _sortedSkinportItems;
         private Timer _timer;
 
         public FloatController(HttpClient httpClient)
         {
             _httpClient = httpClient;
+            _sortedSkinportItems = new List<SkinportItem>();
         }
 
         [HttpGet("ping")]
@@ -27,21 +28,24 @@ namespace FloatService.Controllers
         }
 
         [HttpGet("highest_discount")]
-        public async Task<IActionResult> GetHighestDiscounted()
+        public IActionResult GetHighestDiscounted()
         {
-            var data = await FetchHighestDiscount();
-            return Ok(data);
+            if (_sortedSkinportItems == null)
+            {
+                return BadRequest(new { message = "No data available." });
+            }
+
+            return Ok(_sortedSkinportItems.Take(50));
         }
 
         [HttpGet("skinport")]
         public IActionResult GetSkinportItems()
         {
-            if (_lastFetched == DateTime.MinValue)
+            if (_sortedSkinportItems == null)
             {
-                return BadRequest(new { message = "The connection is being rate limited." });
+                return Ok(_cachedSkinportData);
             }
-
-            return Ok(_cachedSkinportData);
+            return BadRequest(new { message = "The connection is being rate limited." });
         }
 
         private async Task<JsonElement> FetchSkinportItems()
@@ -56,8 +60,6 @@ namespace FloatService.Controllers
 
                 if (response.StatusCode == HttpStatusCode.TooManyRequests)
                 {
-                    _cachedSkinportData = JsonDocument.Parse("{\"rate_limit_exceeded\": true}").RootElement;
-                    _lastFetched = DateTime.MinValue;
                     return _cachedSkinportData;
                 }
 
@@ -78,8 +80,7 @@ namespace FloatService.Controllers
                         content = await response.Content.ReadAsStringAsync();
                     }
 
-                    _cachedSkinportData = JsonDocument.Parse(content).RootElement;
-                    _lastFetched = DateTime.Now;
+                    ProcessAndSortSkinportData(content);
 
                     return _cachedSkinportData;
                 }
@@ -90,19 +91,28 @@ namespace FloatService.Controllers
             }
         }
 
-        private async Task<JsonElement> FetchHighestDiscount()
+        private void ProcessAndSortSkinportData(string content)
         {
-            string url = "https://csfloat.com/api/v1/listings?sort_by=highest_discount&type=buy_now";
-            HttpResponseMessage response = await _httpClient.GetAsync(url);
-            if (response.IsSuccessStatusCode)
+            var items = JsonSerializer.Deserialize<List<SkinportItem>>(content);
+
+            foreach (var item in items)
             {
-                string content = await response.Content.ReadAsStringAsync();
-                return JsonDocument.Parse(content).RootElement;
+                item.Discount = CalculateDiscount(item.SuggestedPrice, item.MinPrice);
             }
-            else
+
+            _sortedSkinportItems = items
+                .Where(i => i.Discount.HasValue)
+                .OrderByDescending(i => i.Discount)
+                .ToList();
+        }
+
+        private decimal? CalculateDiscount(decimal? suggestedPrice, decimal? minPrice)
+        {
+            if (suggestedPrice.HasValue && minPrice.HasValue && minPrice.Value < suggestedPrice.Value)
             {
-                throw new HttpRequestException("Failed to fetch data from the external service.");
+                return ((suggestedPrice.Value - minPrice.Value) / suggestedPrice.Value) * 100;
             }
+            return null;
         }
 
         public void StartFetchingData()
