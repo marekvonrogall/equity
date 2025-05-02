@@ -10,14 +10,15 @@ namespace FloatService.Controllers
     public class FloatController : ControllerBase
     {
         private readonly HttpClient _httpClient;
-        private JsonElement _cachedSkinportData;
+        private SkinportData _skinportData;
         private List<SkinportItem> _sortedSkinportItems;
         private Timer _timer;
 
-        public FloatController(HttpClient httpClient)
+        public FloatController(HttpClient httpClient, SkinportData skinportData)
         {
             _httpClient = httpClient;
             _sortedSkinportItems = new List<SkinportItem>();
+            _skinportData = skinportData;
         }
 
         [HttpGet("ping")]
@@ -41,11 +42,11 @@ namespace FloatService.Controllers
         [HttpGet("skinport")]
         public IActionResult GetSkinportItems()
         {
-            if (_cachedSkinportData.ValueKind == JsonValueKind.Undefined)
+            if (_skinportData.CachedSkinportData.ValueKind == JsonValueKind.Undefined)
             {
                 return BadRequest(new { message = "No data available, and the connection is being rate limited." });
             }
-            return Ok(_cachedSkinportData);
+            return Ok(_skinportData.CachedSkinportData);
         }
 
         private async Task<JsonElement> FetchSkinportItems()
@@ -60,11 +61,11 @@ namespace FloatService.Controllers
 
                 if (response.StatusCode == HttpStatusCode.TooManyRequests)
                 {
-                    if (_cachedSkinportData.ValueKind == JsonValueKind.Undefined)
+                    if (_skinportData.CachedSkinportData.ValueKind == JsonValueKind.Undefined)
                     {
                         throw new HttpRequestException("Rate-limited and no cached data available.");
                     }
-                    return _cachedSkinportData;
+                    return _skinportData.CachedSkinportData;
                 }
 
                 if (response.IsSuccessStatusCode)
@@ -84,11 +85,11 @@ namespace FloatService.Controllers
                         content = await response.Content.ReadAsStringAsync();
                     }
 
-                    _cachedSkinportData = JsonDocument.Parse(content).RootElement;
+                    _skinportData.CachedSkinportData = JsonDocument.Parse(content).RootElement;
 
-                    ProcessAndSortSkinportData(_cachedSkinportData);
+                    ProcessAndSortSkinportData(_skinportData.CachedSkinportData);
 
-                    return _cachedSkinportData;
+                    return _skinportData.CachedSkinportData;
                 }
                 else
                 {

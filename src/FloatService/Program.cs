@@ -1,5 +1,6 @@
 using System.Net;
 using FloatService.Controllers;
+using FloatService;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,8 +19,8 @@ builder.WebHost.ConfigureKestrel((context, options) =>
     options.Listen(IPAddress.Any, 5001);
 });
 
+builder.Services.AddSingleton<SkinportData>();
 builder.Services.AddHttpClient<FloatController>();
-builder.Services.AddSingleton<FloatController>();
 
 // Add services to the container.
 builder.Services.AddControllers();
